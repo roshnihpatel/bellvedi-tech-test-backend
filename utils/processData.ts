@@ -1,5 +1,6 @@
-import fs from 'fs/promises';
-interface StationData {
+import fs from 'fs';
+ 
+export interface StationData {
   "FROM_TIPLOC": string;
   "TO_TIPLOC": string;
   "DISTANCE": number;
@@ -7,12 +8,12 @@ interface StationData {
 }
 
 
-export async function processData(filepath:string){
+export  function processData(filepath:string){
   
   try {
-      const data = await fs.readFile(filepath, {encoding:'utf8'})
+      const data =  fs.readFileSync(filepath, 'utf8')
       const rows = data.split(/\n|$/g)
-      let stationDict: StationData[] = []
+      const stationDict: StationData[] = []
       for(let i = 1; i< rows.length; i++){
         const currentRow = rows[i].split(/,/g)
         const  [fromTiploc, toTiploc, distance, electric, passengerUse, lineCode] = currentRow
