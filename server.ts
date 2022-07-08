@@ -44,7 +44,7 @@ app.get("/path", (req,res) => {
   const {from, to}: {from: string, to:string} = req.body
   const shortestPath: {path: string[]| null, cost: number} = stationRoute.path(from, to, {cost:true})
   if(!shortestPath.path){
-    res.status(400).json('stations do not exist or thers is no path between stations')
+    res.status(400).json('stations do not exist or there is no path between stations')
   }
   res.json(shortestPath)
 })
