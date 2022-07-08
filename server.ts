@@ -29,7 +29,7 @@ app.use(cors()) //add CORS support to each following route handler
 // client.connect();
 
 app.get("/", (req, res) => {
-  res.json({
+  res.send({
     message:
       "Welcome station routes api, try GET /allStations and GET/path req.body = {from: stationName to: stationName}",
   });
@@ -40,9 +40,10 @@ app.get("/allStations", (req,res) => {
  res.json(allStationsList)
 })
 
-app.get("/path", (req,res) => {
-  const {from, to}: {from: string, to:string} = req.body
-  const shortestPath: {path: string[]| null, cost: number} = stationRoute.path(from, to, {cost:true})
+app.get("/path/:from/:to", (req,res) => {
+  const fromStation: string = req.params.from
+  const toStation: string = req.params.to
+  const shortestPath: {path: string[]| null, cost: number} = stationRoute.path(fromStation, toStation, {cost:true})
   if(!shortestPath.path){
     res.status(400).json('stations do not exist or there is no path between stations')
   }
