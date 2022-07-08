@@ -5,24 +5,31 @@ import {StationData} from "./processData";
 export function createGraph(filepath:string){
     const route = new Graph;
     
-         const stationsArray =  processData(filepath)
+         const tracksArray =  processData(filepath)
+         const allStations:string[] =[]
          
-         
-         stationsArray.map( (stationData: StationData) => {
+         tracksArray.map( (stationData: StationData) => {
             const cost = stationData.DISTANCE
-            if(cost){
+            const startNode =  stationData.FROM_TIPLOC
+            const goalNode = stationData.TO_TIPLOC
+            if(cost && startNode && goalNode){
                 const c = new Map()
-                const startNode =  stationData.FROM_TIPLOC
-                const goalNode = stationData.TO_TIPLOC
                 c.set(goalNode, cost)
                 route.addNode(startNode, c)
-            } })
+            }
+            if(!allStations.includes(startNode)){
+                allStations.push(startNode)
+            }
+            if(!allStations.includes(goalNode)){
+                allStations.push(goalNode)
+            }
+         })
     
 
-    return route
+    return [route, allStations]
 
 }
 
 
-export const stationRoute = createGraph('data/stationsData.txt')
+export const [stationRoute, allStationsList] = createGraph('data/stationsData.txt')
 //console.log(stationRoute)

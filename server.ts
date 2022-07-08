@@ -2,6 +2,8 @@
 import { config } from "dotenv";
 import express from "express";
 import cors from "cors";
+import {stationRoute, allStationsList} from "./utils/stationsGraph"
+
 
 config(); //Read .env file lines as though they were env vars.
 
@@ -11,8 +13,8 @@ config(); //Read .env file lines as though they were env vars.
 //For the ssl property of the DB connection config, use a value of...
 // false - when connecting to a local DB
 // { rejectUnauthorized: false } - when connecting to a heroku DB
-const herokuSSLSetting = { rejectUnauthorized: false }
-const sslSetting = process.env.LOCAL ? false : herokuSSLSetting
+//const herokuSSLSetting = { rejectUnauthorized: false }
+//const sslSetting = process.env.LOCAL ? false : herokuSSLSetting
 // const dbConfig = {
 //   connectionString: process.env.DATABASE_URL,
 //   ssl: sslSetting,
@@ -26,9 +28,26 @@ app.use(cors()) //add CORS support to each following route handler
 // const client = new Client(dbConfig);
 // client.connect();
 
-app.get("/", async (req, res) => {
-  console.log('hello')
+app.get("/", (req, res) => {
+  res.json({
+    message:
+      "Welcome station routes api, try GET /allStations and GET/path req.body = {from: stationName to: stationName}",
+  });
 });
+
+app.get("/allStations", (req,res) => {
+ 
+ res.json(allStationsList)
+})
+
+app.get("/path", (req,res) => {
+  const {from, to}: {from: string, to:string} = req.body
+  const shortestPath: {path: string[]| null, cost: number} = stationRoute.path(from, to, {cost:true})
+  if(!shortestPath.path){
+    res.status(400).json('stations do not exist or thers is no path between stations')
+  }
+  res.json(shortestPath)
+})
 
 
 //Start the server on the given port
