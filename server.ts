@@ -31,7 +31,7 @@ app.use(cors()) //add CORS support to each following route handler
 app.get("/", (req, res) => {
   res.send({
     message:
-      "Welcome station routes api, try GET /allStations and GET/path req.body = {from: stationName to: stationName}",
+      "Welcome station routes api, try GET /allStations and GET/path/:from/:to ",
   });
 });
 
